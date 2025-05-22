@@ -14,10 +14,13 @@ import {
 } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
+// Type definition for tables in Supabase
+type TableName = "functions" | "categories" | "subcategories" | "assessments";
+
 type ImportOption = {
   id: string;
   name: string;
-  table: string;
+  table: TableName;
   description: string;
 };
 

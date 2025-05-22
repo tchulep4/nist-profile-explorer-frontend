@@ -8,12 +8,16 @@ import { toast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 
+// Type definition for tables and functions in Supabase
+type TableName = "functions" | "categories" | "subcategories" | "assessments" | "vw_gap_list";
+type RpcFunctionName = "report_maturity_summary";
+
 type ExportOption = {
   id: string;
   name: string;
   description: string;
-  table: string;
-  rpc?: string;
+  table?: TableName;
+  rpc?: RpcFunctionName;
 };
 
 const exportOptions: ExportOption[] = [
@@ -88,7 +92,7 @@ const Export = () => {
           
           if (rpcError) throw rpcError;
           data = rpcData;
-        } else {
+        } else if (option.table) {
           const { data: tableData, error: tableError } = await supabase
             .from(option.table)
             .select('*');
@@ -106,13 +110,13 @@ const Export = () => {
                 // Handle values that need escaping
                 if (value === null || value === undefined) return '';
                 if (typeof value === 'object') value = JSON.stringify(value);
-                value = String(value);
+                const strValue = String(value);
                 
                 // Escape commas, quotes, and wrap in quotes if needed
-                if (value.includes(',') || value.includes('"') || value.includes('\n')) {
-                  value = `"${value.replace(/"/g, '""')}"`;
+                if (strValue.includes(',') || strValue.includes('"') || strValue.includes('\n')) {
+                  return `"${strValue.replace(/"/g, '""')}"`;
                 }
-                return value;
+                return strValue;
               })
               .join(',')
           ).join('\n');
@@ -171,31 +175,39 @@ const Export = () => {
       })
       .catch(() => {
         // If template file doesn't exist, generate one based on table structure
-        supabase
-          .from(option.table)
-          .select('*')
-          .limit(1)
-          .then(({ data }) => {
-            if (!data || data.length === 0) {
-              toast({
-                title: "Could not generate template",
-                description: "No data structure available",
-                variant: "destructive",
-              });
-              return;
-            }
-            
-            const headers = Object.keys(data[0]).join(',');
-            const csv = headers;
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', `${option.id}_template.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+        if (option.table) {
+          supabase
+            .from(option.table)
+            .select('*')
+            .limit(1)
+            .then(({ data }) => {
+              if (!data || data.length === 0) {
+                toast({
+                  title: "Could not generate template",
+                  description: "No data structure available",
+                  variant: "destructive",
+                });
+                return;
+              }
+              
+              const headers = Object.keys(data[0]).join(',');
+              const csv = headers;
+              const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+              const url = URL.createObjectURL(blob);
+              const link = document.createElement('a');
+              link.href = url;
+              link.setAttribute('download', `${option.id}_template.csv`);
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+            });
+        } else {
+          toast({
+            title: "Could not generate template",
+            description: "Template generation not supported for this option",
+            variant: "destructive",
           });
+        }
       });
   };
 
