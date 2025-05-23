@@ -1,7 +1,9 @@
 
 import { supabase } from "@/integrations/supabase/client";
-import { ImportOption } from "@/types/import";
+import { ImportOption, importOptions } from "@/types/import";
+import { TableName } from "@/types/export-import";
 import { toast } from "@/hooks/use-toast";
+import type { Database } from "@/integrations/supabase/types";
 
 export const parseCSVFile = (file: File): Promise<Record<string, any>[]> => {
   return new Promise((resolve, reject) => {
@@ -50,9 +52,10 @@ export const importDataToTable = async (
     throw new Error("No data to import");
   }
   
+  // Use type assertion to handle the dynamic table name
   const { error } = await supabase
-    .from(option.table)
-    .insert(importData);
+    .from(option.table as keyof Database['public']['Tables'])
+    .insert(importData as any);
   
   if (error) {
     throw error;
@@ -77,7 +80,7 @@ export const downloadTemplate = async (optionId: string): Promise<void> => {
     }
     
     const { data } = await supabase
-      .from(option.table)
+      .from(option.table as keyof Database['public']['Tables'])
       .select('*')
       .limit(1);
     
