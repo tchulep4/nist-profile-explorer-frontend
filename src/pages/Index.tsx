@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -65,7 +64,7 @@ const Index = () => {
               variant="outline" 
               size="lg" 
               onClick={() => navigate('/demo')}
-              className="border-2 border-blue-200 text-blue-700 hover:bg-blue-50 px-8"
+              className="border-2 border-blue-600 text-blue-700 hover:bg-blue-50 px-8"
             >
               <Eye className="w-4 h-4 mr-2" />
               View Demo

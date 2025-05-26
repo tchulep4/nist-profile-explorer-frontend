@@ -13,6 +13,8 @@ import Import from "./pages/Import";
 import Settings from "./pages/Settings";
 import DemoOverview from "./pages/DemoOverview";
 import DemoFrameworkExplorer from "./pages/DemoFrameworkExplorer";
+import Admin from "./pages/Admin";
+import LicenseActivation from "./pages/LicenseActivation";
 import DashboardLayout from "./components/layouts/DashboardLayout";
 import DemoLayout from "./components/layouts/DemoLayout";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -29,12 +31,19 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/license-activation" element={<LicenseActivation />} />
             
             <Route element={<DashboardLayout />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/export" element={<Export />} />
               <Route path="/import" element={<Import />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/admin" element={<Admin />} />
+            </Route>
+            
+            <Route element={<DemoLayout />}>
+              <Route path="/demo" element={<DemoOverview />} />
+              <Route path="/demo/explorer" element={<DemoFrameworkExplorer />} />
             </Route>
             
             <Route path="*" element={<NotFound />} />
