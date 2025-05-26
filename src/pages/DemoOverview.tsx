@@ -1,10 +1,9 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { demoMaturitySummary, demoAssessments, demoSubcategories } from "@/data/demoData";
 import { Badge } from "@/components/ui/badge";
-import { Lock, TrendingUp, Shield, AlertTriangle } from "lucide-react";
+import { Lock, TrendingUp, Shield, AlertTriangle, Eye } from "lucide-react";
 
 const DemoOverview = () => {
   const navigate = useNavigate();
