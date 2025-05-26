@@ -11,7 +11,10 @@ import Dashboard from "./pages/Dashboard";
 import Export from "./pages/Export";
 import Import from "./pages/Import";
 import Settings from "./pages/Settings";
+import DemoOverview from "./pages/DemoOverview";
+import DemoFrameworkExplorer from "./pages/DemoFrameworkExplorer";
 import DashboardLayout from "./components/layouts/DashboardLayout";
+import DemoLayout from "./components/layouts/DemoLayout";
 import { AuthProvider } from "./contexts/AuthContext";
 
 const queryClient = new QueryClient();
